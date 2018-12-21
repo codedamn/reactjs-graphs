@@ -1,0 +1,28 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.canvas, .vertices {
+	position: relative
+}
+
+.canvas {
+	height: 200px;
+}
+
+.vertices {
+    display: flex;
+    flex-grow: 1;
+    position: relative;
+    background: transparent;
+    flex-direction: row;
+    align-items: center;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.vertex {
+	padding: 20px;
+    margin: 5px;
+}
