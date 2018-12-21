@@ -6,15 +6,21 @@ ReactDOM.render(<Graph
 	vertices={[
 		"HTML",
 		"CSS",
+		"jQuery",
 		"JavaScript",
 		"PHP",
-		"Python"
+		"Python",
+		"Perl",
+		"Ruby"
 	]}
 	edges={[
 		["HTML","CSS"],
-		["CSS","JavaScript"],
-		["CSS", "PHP"],
+		["CSS", "jQuery"],
+		["jQuery","JavaScript"],
+		["jQuery", "PHP"],
 		["PHP", "Python"],
+		["Python", "Perl"],
+		["Python", "Ruby"]
 	]}
-
+	orientation="horizontal"
 />, document.getElementById('root'))
