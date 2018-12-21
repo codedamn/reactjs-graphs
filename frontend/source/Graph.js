@@ -32,7 +32,7 @@ export default class Graph extends React.Component {
 		
 		let yCenter = 100
 		let totalYAllowed = yCenter*2
-		let vertexGap = 150
+		let vertexGap = this.props.orientation === 'horizontal' ? 100 : 70
 
 		console.log(this.state.list)
 
@@ -52,9 +52,13 @@ export default class Graph extends React.Component {
 			if(mainVertexCoordinates) {
 				// if mainVertex is already set, take partitionLength from it (to keep it at same Y coordinate)
 				// also take x coordinate from the same and add the standard center gap
-
-				partitionLength = mainVertexCoordinates.y * 2/(edgesTo.length + 1)
-				childX = mainVertexCoordinates.x + vertexGap
+				if(this.props.orientation === 'horizontal') {
+					partitionLength = mainVertexCoordinates.y * 2/(edgesTo.length + 1)
+					childX = mainVertexCoordinates.x + vertexGap
+				} else {
+					partitionLength = mainVertexCoordinates.x * 2/(edgesTo.length + 1)
+					childX = mainVertexCoordinates.y + vertexGap
+				}
 			}
 
 			for(let i=0;i<edgesTo.length;i++) {
@@ -96,9 +100,16 @@ export default class Graph extends React.Component {
 				if(flag) throw new Error("Initializing the graph with multiple vertices? Only 1 vertex is supported for now")
 				// this is the first vertex which was not registered in the for-loop above
 				flag = true
-				this.state.vertexCoordinates[vertex] = {
-					x: 100,
-					y: yCenter
+				if(this.props.orientation === 'horizontal') {
+					this.state.vertexCoordinates[vertex] = {
+						x: 100,
+						y: yCenter
+					}
+				} else {
+					this.state.vertexCoordinates[vertex] = {
+						x: yCenter,
+						y: 100
+					}
 				}
 			}
 		})
@@ -129,12 +140,12 @@ export default class Graph extends React.Component {
 
 	render() {
 
-		const vertices = this.props.vertices
+		const { vertices, width, height } = this.props
 
 		const vertexCoordinates = this.state.vertexCoordinates
 
 		return (
-		<Stage width={window.innerWidth} height={window.innerHeight}>
+		<Stage width={width} height={height}>
 			<Layer>
 				{
 					this.getEdges()
@@ -159,7 +170,9 @@ export default class Graph extends React.Component {
 }
 
 Graph.propTypes = {
-	orientation: PropTypes.oneOf(['horizontal', 'vertical']).isRequired
+	orientation: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
+	width: PropTypes.number.isRequired,
+	height: PropTypes.number.isRequired
 }
 
 Graph.defaultProps = {

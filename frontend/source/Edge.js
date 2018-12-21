@@ -11,7 +11,7 @@ export default class Edge extends React.Component {
 					points={points}
 					stroke="#ebb2b2"
 					tension={1}
-					strokeWidth={1}
+					strokeWidth={3}
 				/>
 	}
 }

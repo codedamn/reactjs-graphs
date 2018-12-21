@@ -23,4 +23,6 @@ ReactDOM.render(<Graph
 		["Python", "Ruby"]
 	]}
 	orientation="horizontal"
+	width={window.innerWidth}
+	height={500}
 />, document.getElementById('root'))
