@@ -1,15 +1,9 @@
 import React from 'react'
 import "./styles.css"
-import { Stage, Layer, Group } from 'react-konva'
+import { Stage, Layer, Group } from 'react-konva' // Don't forget to update konva.js!
 import Vertex from './Vertex'
 import Edge from './Edge'
 import PropTypes from 'prop-types'
-
-/*
-['Layer', 'FastLayer', 'Group', 'Label', 'Rect', 'Circle', 'Ellipse', 'Wedge', 'Line', 'Sprite', 
-'Image', 'Text', 'TextPath', 'Star', 'Ring', 'Arc', 'Tag', 'Path', 'RegularPolygon', 'Arrow', 
-'Shape', 'Transformer']
-*/
 
 export default class Graph extends React.Component {
 

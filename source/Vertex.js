@@ -1,5 +1,4 @@
 import React from 'react'
-import Konva from 'konva'
 import { Circle, Text } from 'react-konva'
 import PropTypes from 'prop-types'
 
