@@ -15,7 +15,7 @@ export default class Graph extends React.Component {
 		}
 
 		props.vertices.forEach((vertex, index) => {
-			this.state.list.push({ name: vertex, next: [] })
+			this.state.list.push({ name: vertex.label, next: [] })
 		})
 
 		props.edges.map(edge => {
@@ -94,19 +94,19 @@ export default class Graph extends React.Component {
 		let flag = false
 
 		props.vertices.forEach(vertex => {
-			if(vertex in this.state.vertexCoordinates) {
+			if(vertex.label in this.state.vertexCoordinates) {
 				// ok
 			} else {
 				if(flag) throw new Error("Initializing the graph with multiple vertices? Only 1 vertex is supported for now")
 				// this is the first vertex which was not registered in the for-loop above
 				flag = true
 				if(this.props.orientation === 'horizontal') {
-					this.state.vertexCoordinates[vertex] = {
+					this.state.vertexCoordinates[vertex.label] = {
 						x: 0,
 						y: totalYAllowed/2
 					}
 				} else {
-					this.state.vertexCoordinates[vertex] = {
+					this.state.vertexCoordinates[vertex.label] = {
 						x: totalYAllowed/2,
 						y: 0
 					}
@@ -167,10 +167,10 @@ export default class Graph extends React.Component {
 					{vertices.map((vertex, index) => {
 						return <Vertex
 									key={index}
-									x={vertexCoordinates[vertex].x}
-									y={vertexCoordinates[vertex].y}
-									label={vertex}
-									onClick={_ => alert(vertex)}
+									x={vertexCoordinates[vertex.label].x}
+									y={vertexCoordinates[vertex.label].y}
+									label={vertex.label}
+									onClick={_ => vertex.onClick(vertex.label, index, vertex.extras)}
 									{...vertexProps}
 								/>
 						})

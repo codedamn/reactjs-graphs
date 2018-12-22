@@ -8,34 +8,59 @@ A simple react component to draw branched graphs consisting of vertices and edge
 3. Use directly in render function. Here's an example explaining all possible props you can pass:
 
 ```jsx
-<Graph
-	vertices={[ // all possible edges
-		"HTML",
-		"CSS",
-		"jQuery",
-		"JavaScript",
-		"PHP",
-		"Python",
-		"Perl",
-		"Ruby"
-	]}
-	edges={[ // edges between nodes. Please draw a graph on paper first and see for yourself how the edges flow to place a suitable array value here
-		["HTML","CSS"],
-		["CSS", "jQuery"],
-		["jQuery","JavaScript"],
-		["jQuery", "PHP"],
-		["PHP", "Python"],
-		["Python", "Perl"],
-		["Python", "Ruby"]
-	]}
-	orientation="horizontal" // orientation of graph (whether horizontal or vertical)
-	width={window.innerWidth} // width of graph
-	height={window.innerHeight} // height of graph
-	vertexStroke="#df6766" // color of border of vertices
-	edgeStroke="#ebb2b2" // color of edge
-	edgeWidth={2} // thickness of edge
-	vertexRadius={10} // radius of vertex -> bigger the radius, larger the vertex size
-/>
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Graph from 'reactjs-graphs'
+
+const onClick = (label, index, extras) => {
+	console.log(label, index, extras)
+}
+
+const vertices = [
+	{ label: "Here it begins", onClick, extras: "Some helper data" },
+	{ label: "HTML", onClick },
+	{ label: "CSS", onClick },
+	{ label: "Sass", onClick },
+	{ label: "JavaScript", onClick },
+	{ label: "Bootstrap", onClick },
+	{ label: "jQuery", onClick },
+	{ label: "ReactJS", onClick, extras: "Could be anything, literally" },
+	{ label: "Jest", onClick },
+	{ label: "Angular", onClick },
+	{ label: "Vue", onClick },
+	{ label: "Redux", onClick },
+	{ label: "React Material", onClick },
+	{ label: "Vuetify", onClick },
+]
+
+const edges = [
+	["Here it begins", "HTML"],
+	["HTML", "CSS"],
+	["CSS", "JavaScript"],
+	["CSS", "Sass"],
+	["JavaScript", "jQuery"],
+	["jQuery", "Bootstrap"],
+	["jQuery", "ReactJS"],
+	["jQuery", "Angular"],
+	["jQuery", "Vue"],
+	["ReactJS", "Redux"],
+	["Redux", "React Material"],
+	["React Material", "Jest"],
+	["Vue", "Vuetify"],
+]
+
+
+ReactDOM.render(<Graph 
+	vertices={vertices}
+	edges={edges}
+	orientation="horizontal"
+	width={window.innerWidth}
+	height={window.innerHeight}
+	vertexStroke="#df6766"
+	edgeStroke="#ebb2b2"
+	edgeWidth={2}
+	vertexRadius={10}
+/>, document.getElementById('root'))
 ```
 
 4. The example above would render the following graph:
