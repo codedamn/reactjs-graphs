@@ -4,7 +4,7 @@ const source = path.resolve(__dirname, 'source')
 const build = path.resolve(__dirname, 'build')
 
 module.exports = {
-  entry: path.join(source, 'index.js'),
+  entry: path.join(source, 'Graph.js'),
   output: {
     path: build,
 	filename: 'index.js',
