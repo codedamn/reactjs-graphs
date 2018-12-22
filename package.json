@@ -1,14 +1,14 @@
 {
-	"name": "graph",
+	"name": "react-graphs",
 	"version": "1.0.0",
-	"description": "",
+	"description": "Create branched graphs in ReactJS",
 	"main": "build/index.js",
 	"scripts": {
 		"start": "webpack-dev-server",
 		"build": "webpack -p --display-modules",
 		"prepublishOnly": "npm run build"
 	},
-	"keywords": [],
+	"keywords": ["graphs", "react graphs", "branched react graphs"],
 	"author": "",
 	"license": "ISC",
 	"peerDependencies": {
