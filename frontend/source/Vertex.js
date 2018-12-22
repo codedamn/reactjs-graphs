@@ -5,12 +5,12 @@ import PropTypes from 'prop-types'
 
 export default class Vertex extends React.Component {
 
-	constructor() {
-		super()
+	constructor(props) {
+		super(props)
 		this.mouseInVertex = this.mouseInVertex.bind(this)
 		this.mouseOutVertex = this.mouseOutVertex.bind(this)
 		this.state = {
-			vertexFill: "white",
+			vertexFill: props.inactiveVertexFill,
 			textOffsetX: 0
 		}
 	}
@@ -24,20 +24,20 @@ export default class Vertex extends React.Component {
 	mouseOutVertex() {
 		document.body.style.cursor = 'default'
 		this.setState({
-			vertexFill: "white"
+			vertexFill: this.props.inactiveVertexFill
 		})
 	}
 
 	mouseInVertex() {
 		document.body.style.cursor = 'pointer'
 		this.setState({
-			vertexFill: "#df6766"
+			vertexFill: this.props.activeVertexFill
 		})
 	}
 
 	render() {
 
-		const { x, y, label, onClick } = this.props
+		const { x, y, label, onClick, vertexStroke, vertexStrokeWidth, vertexRadius  } = this.props
 		const { vertexFill, textOffsetX } = this.state
 
 		return (
@@ -54,10 +54,10 @@ export default class Vertex extends React.Component {
 					onMouseEnter={this.mouseInVertex}
 					onMouseLeave={this.mouseOutVertex}
 					y={y}
-					stroke="#df6766"
-					strokeWidth={3}
+					stroke={vertexStroke}
+					strokeWidth={vertexStrokeWidth}
 					fill={vertexFill}
-					radius={10}
+					radius={vertexRadius}
 				/>
 			</>
 		)
@@ -66,5 +66,18 @@ export default class Vertex extends React.Component {
 
 Vertex.propTypes = {
 	x: PropTypes.number.isRequired,
-	y: PropTypes.number.isRequired
+	y: PropTypes.number.isRequired,
+	vertexStroke: PropTypes.string.isRequired,
+	vertexStrokeWidth: PropTypes.number.isRequired,
+	inactiveVertexFill: PropTypes.string.isRequired,
+	activeVertexFill: PropTypes.string.isRequired,
+	vertexRadius: PropTypes.number.isRequired
+}
+
+Vertex.defaultProps ={
+	vertexStroke: "#df6766",
+	vertexStrokeWidth: 3,
+	inactiveVertexFill: "white",
+	activeVertexFill: "#df6766",
+	vertexRadius: 10
 }

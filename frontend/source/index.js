@@ -24,5 +24,9 @@ ReactDOM.render(<Graph
 	]}
 	orientation="horizontal"
 	width={window.innerWidth}
-	height={500}
+	height={167}
+	vertexStroke="#df6766"
+	edgeStroke="#ebb2b2"
+	edgeWidth={2}
+	vertexRadius={10}
 />, document.getElementById('root'))
