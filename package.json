@@ -5,7 +5,7 @@
 	"main": "build/index.js",
 	"scripts": {
 		"start": "webpack-dev-server",
-		"build": "webpack -p --display-modules",
+		"build": "NODE_ENV=production webpack -p --display-modules",
 		"prepublishOnly": "npm run build"
 	},
 	"keywords": ["graphs", "react graphs", "branched react graphs"],

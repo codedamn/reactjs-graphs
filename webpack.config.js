@@ -2,13 +2,15 @@ const path = require('path')
 
 const source = path.resolve(__dirname, 'source')
 const build = path.resolve(__dirname, 'build')
+const production = process.env.NODE_ENV === 'production'
 
 module.exports = {
-  entry: path.join(source, 'Graph.js'),
+  entry: path.join(source, production ? 'Graph.js' : 'index.js'),
   output: {
     path: build,
 	filename: 'index.js',
-	publicPath: '/'
+	publicPath: '/',
+	libraryTarget: production ? 'commonjs2': undefined
   },
   mode: process.env.NODE_ENV || 'development',
   devServer: {
