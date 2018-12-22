@@ -25,7 +25,7 @@ export default class Graph extends React.Component {
 		let mainIndex = 1
 		
 		let totalYAllowed = props.height
-		let vertexGap = props.orientation === 'horizontal' ? 100 : 70
+		let vertexGap = props.vertexGap
 
 		let horizontalMin = 0, horizontalMax = 0
 		let verticalMin = props.height/2, verticalMax = props.height/2
@@ -185,9 +185,11 @@ export default class Graph extends React.Component {
 Graph.propTypes = {
 	orientation: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
 	width: PropTypes.number.isRequired,
-	height: PropTypes.number.isRequired
+	height: PropTypes.number.isRequired,
+	vertexGap: PropTypes.number.isRequired
 }
 
 Graph.defaultProps = {
-	orientation: 'horizontal'
+	orientation: 'horizontal',
+	vertexGap: 100
 }
