@@ -178,7 +178,7 @@ export default class Graph extends React.Component {
 									x={vertexCoordinates[vertex.label].x}
 									y={vertexCoordinates[vertex.label].y}
 									label={vertex.label}
-									onClick={_ => vertex.onClick(vertex.label, index, vertex.extras)}
+									onClick={_ => vertex.onClick && vertex.onClick(vertex.label, index, vertex.extras)}
 									disabled={vertex.disabled}
 									{...vertexProps}
 								/>
@@ -192,7 +192,7 @@ export default class Graph extends React.Component {
 }
 
 Graph.propTypes = {
-	width: PropTypes.number.isRequired,
+	width: PropTypes.number,
 	height: PropTypes.number.isRequired,
 	vertexGap: PropTypes.number.isRequired,
 	centerInCanvas: PropTypes.bool.isRequired,

@@ -12,15 +12,13 @@ export default class Vertex extends React.Component {
 			vertexFill: props.inactiveVertexFill,
 			textOffsetX: 0,
 			textOffsetY: 0,
-			showTextNode: true
 		}
 	}
 
 	componentDidMount() {
 		this.setState({
 			textOffsetX: this.text.width() / 2,
-			textOffsetY: this.text.height() / 2,
-			showTextNode: !this.props.disabled
+			textOffsetY: this.text.height() / 2
 		})
 	}
 
@@ -31,48 +29,38 @@ export default class Vertex extends React.Component {
 	mouseOutVertex() {
 		document.body.style.cursor = 'default'
 		
-		if(this.props.disabled) {
-			// disabled vertex
-			this.setState({
-				showTextNode: false
-			})
-		} else {
-			this.setState({
-				vertexFill: this.props.inactiveVertexFill
-			})
-		}
+		this.setState({
+			vertexFill: this.props.inactiveVertexFill
+		})
+	
 	}
 
 	mouseInVertex() {
 		document.body.style.cursor = 'pointer'
-		if(this.props.disabled) {
-			this.setState({
-				showTextNode: true
-			})
-		} else {
-			this.setState({
-				vertexFill: this.props.activeVertexFill
-			})
-		}
+
+		this.setState({
+			vertexFill: this.props.activeVertexFill
+		})
 	}
 
 	render() {
 
 		const { disabled, x, y, label, onClick, vertexStroke, vertexStrokeWidth, vertexRadius, labelFontSize  } = this.props
-		const { vertexFill, textOffsetX, textOffsetY, showTextNode } = this.state
+		const { vertexFill, textOffsetX, textOffsetY } = this.state
 
 		return (
 			<Group>
-				{showTextNode ? <Text
+				<Text
 					ref={node => this.text = node }
 					x={ x }
+					fill={disabled ? "gray" : undefined }
 					y={y - textOffsetY * 2 - vertexRadius - vertexStrokeWidth}
 					offsetX={textOffsetX}
 					fontSize={labelFontSize}
-					text={label} /> : null }
+					text={label} />
 				<Circle
 					x={x}
-					onClick={onClick}
+					onClick={(...args) => disabled ? void 0 : onClick(...args)}
 					onMouseEnter={this.mouseInVertex}
 					onMouseLeave={this.mouseOutVertex}
 					y={y}

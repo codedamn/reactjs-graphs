@@ -3,17 +3,17 @@ import ReactDOM from 'react-dom'
 import Graph from './Graph'
 
 const onClick = (label, index, extras) => {
-	console.log(label, index, extras)
+	alert(label)
 }
 
 const vertices = [
 	{ label: "HTML", onClick },
 	{ label: "CSS", onClick },
-	{ label: "JavaScript", onClick, disabled: false },
-	{ label: "Sass", onClick, disabled: false },
-	{ label: "React.js", onClick, disabled: false },
-	{ label: "Angular", onClick, disabled: false },
-	{ label: "Vue", onClick, disabled: false },
+	{ label: "JavaScript", onClick, disabled: true },
+	{ label: "Sass", onClick, disabled: true },
+	{ label: "React.js", onClick, disabled: true },
+	{ label: "Angular", onClick, disabled: true },
+	{ label: "Vue", onClick, disabled: true },
 	{ label: "GitHub", },
 	{ label: "Node.js", },
 	{ label: "PHP", },

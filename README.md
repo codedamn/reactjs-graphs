@@ -51,15 +51,18 @@ const edges = [
 
 
 ReactDOM.render(<Graph 
-	vertices={vertices}
-	edges={edges}
-	orientation="horizontal"
-	width={window.innerWidth}
-	height={window.innerHeight}
-	vertexStroke="#df6766"
-	edgeStroke="#ebb2b2"
-	edgeWidth={2}
-	vertexRadius={10}
+	vertices={vertices} // vertices array
+	edges={edges} // edges array
+	width={window.innerWidth} // width of canvas
+	height={500} // height of canvas
+	autoWidth={true} // automatically sets width of canvas using width of graph
+	vertexStroke="#df6766" // color of vertex border
+	edgeStroke="#ebb2b2" // color of edge 
+	edgeWidth={2} // thickness of edge
+	vertexRadius={15} // radius of vertex
+	vertexGap={200} // gap between vertices
+	labelFontSize={20} // font size of labels
+	centerInCanvas={true} // centers the whole graph horizontally and vertically
 />, document.getElementById('root'))
 ```
 
