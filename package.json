@@ -1,6 +1,6 @@
 {
 	"name": "reactjs-graphs",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "Create branched graphs in ReactJS",
 	"main": "build/index.js",
 	"scripts": {
