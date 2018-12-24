@@ -17,36 +17,40 @@ const onClick = (label, index, extras) => {
 }
 
 const vertices = [
-	{ label: "Here it begins", onClick, extras: "Some helper data" },
-	{ label: "HTML", onClick },
-	{ label: "CSS", onClick },
-	{ label: "Sass", onClick },
-	{ label: "JavaScript", onClick },
-	{ label: "Bootstrap", onClick },
-	{ label: "jQuery", onClick },
-	{ label: "ReactJS", onClick, extras: "Could be anything, literally" },
-	{ label: "Jest", onClick },
-	{ label: "Angular", onClick },
-	{ label: "Vue", onClick },
-	{ label: "Redux", onClick },
-	{ label: "React Material", onClick },
-	{ label: "Vuetify", onClick },
+	{ label: "A", onClick },
+	{ label: "B", onClick },
+	{ label: "C", onClick },
+	{ label: "D", onClick },
+	{ label: "E", onClick },
+	{ label: "F", onClick },
+	{ label: "G", onClick },
+	{ label: "H", },
+	{ label: "I", },
+	{ label: "J", },
+	{ label: "K", },
+	{ label: "L", },
+	{ label: "M", },
+	{ label: "N", },
 ]
 
 const edges = [
-	["Here it begins", "HTML"],
-	["HTML", "CSS"],
-	["CSS", "JavaScript"],
-	["CSS", "Sass"],
-	["JavaScript", "jQuery"],
-	["jQuery", "Bootstrap"],
-	["jQuery", "ReactJS"],
-	["jQuery", "Angular"],
-	["jQuery", "Vue"],
-	["ReactJS", "Redux"],
-	["Redux", "React Material"],
-	["React Material", "Jest"],
-	["Vue", "Vuetify"],
+	["A", "B"],
+	["B", "C"],
+	["C", "D"],
+	["C", "E"],
+	["C", "F"],
+	["C", "G"],
+	["F", "H"],
+	["E", "H"],
+	["G", "H"],
+	["H", "I"],
+	["H", "J"],
+	["H", "K"],
+	["K", "L"],
+	["J", "L"],
+	["I", "L"],
+	["L", "M"],
+	["L", "N"]
 ]
 
 
@@ -68,4 +72,4 @@ ReactDOM.render(<Graph
 
 4. The example above would render the following graph:
 
-![Demo](https://raw.githubusercontent.com/codedamn/reactjs-graphs/master/graph.png)
+![Demo](https://raw.Husercontent.com/codedamn/reactjs-graphs/master/graph.png)

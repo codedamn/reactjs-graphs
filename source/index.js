@@ -3,63 +3,58 @@ import ReactDOM from 'react-dom'
 import Graph from './Graph'
 
 const onClick = (label, index, extras) => {
-	alert(label)
+	console.log(label, index, extras)
 }
 
 const vertices = [
-	{ label: "HTML", onClick },
-	{ label: "CSS", onClick },
-	{ label: "JavaScript", onClick, disabled: true },
-	{ label: "Sass", onClick, disabled: true },
-	{ label: "React.js", onClick, disabled: true },
-	{ label: "Angular", onClick, disabled: true },
-	{ label: "Vue", onClick, disabled: true },
-	{ label: "GitHub", },
-	{ label: "Node.js", },
-	{ label: "PHP", },
-	{ label: "Python", },
-	{ label: "Backend", },
-	//{ label: "Express", },
-	{ label: "nginx", },
-	{ label: "Apache", },
+	{ label: "A", onClick },
+	{ label: "B", onClick },
+	{ label: "C", onClick },
+	{ label: "D", onClick },
+	{ label: "E", onClick },
+	{ label: "F", onClick },
+	{ label: "G", onClick },
+	{ label: "H", },
+	{ label: "I", },
+	{ label: "J", },
+	{ label: "K", },
+	{ label: "L", },
+	{ label: "M", },
+	{ label: "N", },
 ]
 
 const edges = [
-	["HTML", "CSS"],
-	["CSS", "JavaScript"],
-	["JavaScript", "Sass"],
-	//["Sass", "Vue"],
-	["JavaScript", "React.js"],
-	["JavaScript", "Angular"],
-	["JavaScript", "Vue"],
-	["Angular", "GitHub"],
-	["React.js", "GitHub"],
-	["Vue", "GitHub"],
-	["GitHub", "Node.js"],
-	["GitHub", "PHP"],
-	["GitHub", "Python"],
-	["Python", "Backend"],
-	["PHP", "Backend"],
-	//["Node.js", "Express"],
-	["Node.js", "Backend"],
-	["Backend", "nginx"],
-	["Backend", "Apache"],
-	//["React.js", "Redux"],
-	//["Vue", "Vuetify"],
+	["A", "B"],
+	["B", "C"],
+	["C", "D"],
+	["C", "E"],
+	["C", "F"],
+	["C", "G"],
+	["F", "H"],
+	["E", "H"],
+	["G", "H"],
+	["H", "I"],
+	["H", "J"],
+	["H", "K"],
+	["K", "L"],
+	["J", "L"],
+	["I", "L"],
+	["L", "M"],
+	["L", "N"]
 ]
 
 
 ReactDOM.render(<Graph 
-	vertices={vertices}
-	edges={edges}
-	width={window.innerWidth}
-	height={500}
-	autoWidth={true}
-	vertexStroke="#df6766"
-	edgeStroke="#ebb2b2"
-	edgeWidth={2}
-	vertexRadius={15}
-	vertexGap={200}
-	labelFontSize={20}
-	centerInCanvas={true}
+	vertices={vertices} // vertices array
+	edges={edges} // edges array
+	width={window.innerWidth} // width of canvas
+	height={500} // height of canvas
+	autoWidth={true} // automatically sets width of canvas using width of graph
+	vertexStroke="#df6766" // color of vertex border
+	edgeStroke="#ebb2b2" // color of edge 
+	edgeWidth={2} // thickness of edge
+	vertexRadius={15} // radius of vertex
+	vertexGap={200} // gap between vertices
+	labelFontSize={20} // font size of labels
+	centerInCanvas={true} // centers the whole graph horizontally and vertically
 />, document.getElementById('root'))
