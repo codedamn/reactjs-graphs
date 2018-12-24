@@ -9,31 +9,25 @@ const onClick = (label, index, extras) => {
 const vertices = [
 	{ label: "HTML", onClick },
 	{ label: "CSS", onClick },
-	{ label: "Sass", onClick, disabled: false },
 	{ label: "JavaScript", onClick, disabled: false },
-//	{ label: "Bootstrap", onClick, disabled: false },
-//	{ label: "jQuery", onClick, disabled: false },
+	{ label: "Sass", onClick, disabled: false },
 	{ label: "React.js", onClick, disabled: false },
 	{ label: "Angular", onClick, disabled: false },
 	{ label: "Vue", onClick, disabled: false },
-//	{ label: "Redux", onClick, disabled: false },
-//	{ label: "Vuetify", onClick, disabled: false },
-{ label: "GitHub", },
-{ label: "Node.js", },
-	//{ label: "GitHub", },
-	//{ label: "MongoDB", },
-	//{ label: "MySQL", },
+	{ label: "GitHub", },
+	{ label: "Node.js", },
 	{ label: "PHP", },
 	{ label: "Python", },
-	{ label: "Express", },
-	//{ label: "nginx", },
-	//{ label: "Apache", },
+	{ label: "Backend", },
+	//{ label: "Express", },
+	{ label: "nginx", },
+	{ label: "Apache", },
 ]
 
 const edges = [
 	["HTML", "CSS"],
 	["CSS", "JavaScript"],
-	["CSS", "Sass"],
+	["JavaScript", "Sass"],
 	//["Sass", "Vue"],
 	["JavaScript", "React.js"],
 	["JavaScript", "Angular"],
@@ -44,7 +38,12 @@ const edges = [
 	["GitHub", "Node.js"],
 	["GitHub", "PHP"],
 	["GitHub", "Python"],
-	["Node.js", "Express"],
+	["Python", "Backend"],
+	["PHP", "Backend"],
+	//["Node.js", "Express"],
+	["Node.js", "Backend"],
+	["Backend", "nginx"],
+	["Backend", "Apache"],
 	//["React.js", "Redux"],
 	//["Vue", "Vuetify"],
 ]
@@ -54,12 +53,13 @@ ReactDOM.render(<Graph
 	vertices={vertices}
 	edges={edges}
 	width={window.innerWidth}
-	height={window.innerHeight}
+	height={500}
+	autoWidth={true}
 	vertexStroke="#df6766"
 	edgeStroke="#ebb2b2"
 	edgeWidth={2}
 	vertexRadius={15}
 	vertexGap={200}
 	labelFontSize={20}
-	perfectlyCenter={true}
+	centerInCanvas={true}
 />, document.getElementById('root'))

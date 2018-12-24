@@ -10,6 +10,8 @@ export default class Graph extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
+			width: props.width,
+			height: props.height,
 			list: [],
 			vertexCoordinates: {}
 		}
@@ -65,7 +67,7 @@ export default class Graph extends React.Component {
 			
 			let x, y
 			if(mainVertex.from.length == 0) {
-				x = vertexGap
+				x = 0
 				y = totalYAllowed/2
 			} else {
 				let closestParent = coords[mainVertex.from[0]]
@@ -77,6 +79,11 @@ export default class Graph extends React.Component {
 						closestParentName = mainVertex.from[i]
 					}
 				}
+				
+				if(!closestParent) {
+					throw new Error(`[CRASHED at "${mainVertex.name}"] Invalid order of passed vertices. Please pass them in the same order as you want them to print on screen`)
+				}
+
 				x = closestParent.x + vertexGap
 
 				
@@ -88,27 +95,41 @@ export default class Graph extends React.Component {
 					if(!coords[currentValue]) {
 						throw new Error(`[CRASHED at "${currentValue}"] Invalid order of passed vertices. Please pass them in the same order as you want them to print on screen`)
 					}
-					debugger
+				//	debugger
 					return total + coords[currentValue].y
 				}, 0)/((mainVertex.siblings + 1) * (mainVertex.from.length))
 
 			}
 
 			coords[mainVertex.name] = { x, y }
+
+			verticalMax = verticalMax > y ? verticalMax : y
+			verticalMin = verticalMin < y ? verticalMin : y
+
+			horizontalMax = horizontalMax > x ? horizontalMax : x
+			horizontalMin = horizontalMin < x ? horizontalMin : x
 		})
 
 		console.log(this.state.vertexCoordinates)
 
-		//this.state.horizontalShift = -(horizontalMin + horizontalMax)/2
-		this.state.verticalShift = ((verticalMin + verticalMax) - (props.height))/2
-		this.state.horizontalShift = ((horizontalMin + horizontalMax) - (props.width))/2
-		
-		if(!props.perfectlyCenter) {
+		if(props.autoWidth) {
+			this.state.width = (horizontalMax - horizontalMin) + 100 // 100 = padding
 		}
 
-		this.state.verticalShift = 0 //-100
+		//this.state.horizontalShift = -(horizontalMin + horizontalMax)/2
+		this.state.verticalShift = ((verticalMin + verticalMax) - (this.state.height))/2
+		this.state.horizontalShift = ((horizontalMin + horizontalMax) - (this.state.width))/2
+		
+		console.log(this.state.horizontalShift, this.state.verticalShift)
+		console.log(horizontalMin, horizontalMax)
+	
+		
+		if(!props.centerInCanvas) {
+			this.state.verticalShift = 0 //-100
+			this.state.horizontalShift = 0
+		}
 
-		this.state.horizontalShift = 0
+
 	}
 
 	getEdges(edgeProps) {
@@ -135,7 +156,7 @@ export default class Graph extends React.Component {
 	}
 
 	render() {
-		const { vertexCoordinates, horizontalShift, verticalShift } = this.state
+		const { vertexCoordinates, horizontalShift, verticalShift, width, height } = this.state
 		
 		const { labelFontSize, vertexStroke, vertexStrokeWidth, inactiveVertexFill, activeVertexFill, vertexRadius } = this.props
 		const vertexProps = { labelFontSize, vertexStroke, vertexStrokeWidth, inactiveVertexFill, activeVertexFill, vertexRadius }
@@ -143,7 +164,7 @@ export default class Graph extends React.Component {
 		const { edgeStroke, edgeWidth } = this.props
 		const edgeProps = { edgeStroke, edgeWidth }
 		
-		const { vertices, width, height } = this.props
+		const { vertices } = this.props
 
 		return (
 		<Stage width={width} height={height}>
@@ -174,10 +195,12 @@ Graph.propTypes = {
 	width: PropTypes.number.isRequired,
 	height: PropTypes.number.isRequired,
 	vertexGap: PropTypes.number.isRequired,
-	perfectlyCenter: PropTypes.bool.isRequired
+	centerInCanvas: PropTypes.bool.isRequired,
+	autoWidth: PropTypes.bool.isRequired
 }
 
 Graph.defaultProps = {
 	vertexGap: 100,
-	perfectlyCenter: false
+	centerInCanvas: false,
+	autoWidth: false
 }
