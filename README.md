@@ -72,4 +72,4 @@ ReactDOM.render(<Graph
 
 4. The example above would render the following graph:
 
-![Demo](https://raw.Husercontent.com/codedamn/reactjs-graphs/master/graph.png)
+![Demo](https://raw.githubusercontent.com/codedamn/reactjs-graphs/master/graph.png)
