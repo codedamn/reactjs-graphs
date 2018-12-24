@@ -19,25 +19,32 @@ const vertices = [
 //	{ label: "Redux", onClick, disabled: false },
 //	{ label: "Vuetify", onClick, disabled: false },
 	{ label: "Node.js", },
+	{ label: "GitHub", },
 	//{ label: "GitHub", },
-	/*{ label: "MongoDB", },
-	{ label: "MySQL", },
+	//{ label: "MongoDB", },
+	//{ label: "MySQL", },
 	{ label: "PHP", },
-	{ label: "nginx", },
-	{ label: "Apache", },*/
+	{ label: "Python", },
+	{ label: "Express", },
+	//{ label: "nginx", },
+	//{ label: "Apache", },
 ]
 
 const edges = [
 	["HTML", "CSS"],
 	["CSS", "JavaScript"],
 	["CSS", "Sass"],
-	["Sass", "Vue"],
+	//["Sass", "Vue"],
 	["JavaScript", "React.js"],
 	["JavaScript", "Angular"],
 	["JavaScript", "Vue"],
-	["Angular", "Node.js"],
-	["React.js", "Node.js"],
-	["Vue", "Node.js"],
+	["Angular", "GitHub"],
+	["React.js", "GitHub"],
+	["Vue", "GitHub"],
+	["GitHub", "Node.js"],
+	["GitHub", "PHP"],
+	["GitHub", "Python"],
+	["Node.js", "Express"],
 	//["React.js", "Redux"],
 	//["Vue", "Vuetify"],
 ]
@@ -46,7 +53,6 @@ const edges = [
 ReactDOM.render(<Graph 
 	vertices={vertices}
 	edges={edges}
-	orientation="horizontal"
 	width={window.innerWidth}
 	height={window.innerHeight}
 	vertexStroke="#df6766"

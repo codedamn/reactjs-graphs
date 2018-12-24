@@ -26,7 +26,7 @@ export default class Graph extends React.Component {
 
 		let mainIndex = 1
 		
-		let totalYAllowed = props.orientation === "horizontal" ? props.height : props.width
+		let totalYAllowed = props.height
 		let vertexGap = props.vertexGap
 
 		let horizontalMin = 0, horizontalMax = 0
@@ -42,19 +42,13 @@ export default class Graph extends React.Component {
 
 			const mainVertexCoordinates = this.state.vertexCoordinates[mainVertex.name]
 			
-			
 			let childX = vertexGap*mainIndex
 
 			if(mainVertexCoordinates) {
 				// if mainVertex is already set, take partitionLength from it (to keep it at same Y coordinate)
 				// also take x coordinate from the same and add the standard center gap
-				if(props.orientation === 'horizontal') {
-					partitionLength = mainVertexCoordinates.y * 2/(edgesTo.length + 1)
-					childX = mainVertexCoordinates.x + vertexGap
-				} else {
-					partitionLength = mainVertexCoordinates.x * 2/(edgesTo.length + 1)
-					childX = mainVertexCoordinates.y + vertexGap
-				}
+				partitionLength = mainVertexCoordinates.y * 2/(edgesTo.length + 1)
+				childX = mainVertexCoordinates.x + vertexGap
 			}
 
 			for(let i=0;i<edgesTo.length;i++) {
@@ -70,24 +64,16 @@ export default class Graph extends React.Component {
 					continue
 				}
 
-				if(props.orientation === 'horizontal') {
-					
-					this.state.vertexCoordinates[childVertex] = {
-						x: childX,
-						y: childY // move the vertex down as i increases
-					}
-				} else {
-					this.state.vertexCoordinates[childVertex] = {
-						x: childY, // move the vertex down as i increases
-						y: childX// move the vertex down as i increases
-					}
+				this.state.vertexCoordinates[childVertex] = {
+					x: childX,
+					y: childY // move the vertex down as i increases
 				}
+
 				verticalMin = childY < verticalMin ? childY : verticalMin
 				verticalMax = childY > verticalMax ? childY : verticalMax
 
 				horizontalMin = childX < horizontalMin ? childX : horizontalMin
 				horizontalMax = childX > horizontalMax ? childX : horizontalMax
-
 			}
 
 			if(edgesTo.length > 1) {
@@ -106,16 +92,9 @@ export default class Graph extends React.Component {
 				if(flag) throw new Error(`Initializing the graph with multiple vertices (${vertex.label})? Only 1 vertex is supported for now`)
 				// this is the first vertex which was not registered in the for-loop above
 				flag = true
-				if(props.orientation === 'horizontal') {
-					this.state.vertexCoordinates[vertex.label] = {
-						x: 0,
-						y: totalYAllowed/2
-					}
-				} else {
-					this.state.vertexCoordinates[vertex.label] = {
-						x: totalYAllowed/2,
-						y: 0
-					}
+				this.state.vertexCoordinates[vertex.label] = {
+					x: 0,
+					y: totalYAllowed/2
 				}
 			}
 		})
@@ -128,9 +107,9 @@ export default class Graph extends React.Component {
 		this.state.backtrackList.forEach(mainVertex => {
 			// this is for correcting positions of multiple vertices joined to single vertex
 			const edgeTo = mainVertex.prev
-			if(edgeTo.length < 2) return
+			if(edgeTo.length < 100) return
 			
-			//debugger
+			debugger
 			
 			//const { y:oldY } = this.state.vertexCoordinates[mainVertex.name]
 
@@ -142,7 +121,30 @@ export default class Graph extends React.Component {
 
 			sumY /= edgeTo.length
 
-			this.state.vertexCoordinates[mainVertex.name].y = sumY
+			//this.state.vertexCoordinates[mainVertex.name].y = sumY
+
+			// now we've messed up with the y coordinate. need to update the immediate next layer
+
+			//debugger
+			const _mainVertex = this.state.list.find(obj => obj.name === mainVertex.name)
+			const edgesNow = _mainVertex.next
+
+			let partitionLength = totalYAllowed/(edgesNow.length + 1)
+
+			const mainVertexCoordinates = this.state.vertexCoordinates[_mainVertex.name]
+			partitionLength = mainVertexCoordinates.y * 2/(edgesNow.length + 1)
+
+			for(let i=0;i<edgesNow.length;i++) {
+				
+				const childVertex = edgesNow[i]
+
+				const childY = (i + 1)*partitionLength
+
+//				this.state.vertexCoordinates[childVertex].y = childY
+
+				verticalMin = childY < verticalMin ? childY : verticalMin
+				verticalMax = childY > verticalMax ? childY : verticalMax
+			}
 
 		})
 
@@ -151,8 +153,7 @@ export default class Graph extends React.Component {
 		this.state.horizontalShift = ((horizontalMin + horizontalMax) - (props.width))/2
 		
 		if(!props.perfectlyCenter) {
-			if(props.orientation === "vertical") this.state.horizontalShift = 0
-			else this.state.verticalShift = 0
+			this.state.verticalShift = 0
 		}
 	}
 
@@ -188,7 +189,7 @@ export default class Graph extends React.Component {
 		const { edgeStroke, edgeWidth } = this.props
 		const edgeProps = { edgeStroke, edgeWidth }
 		
-		const { vertices, width, height, orientation } = this.props
+		const { vertices, width, height } = this.props
 
 		return (
 		<Stage width={width} height={height}>
@@ -202,7 +203,6 @@ export default class Graph extends React.Component {
 									x={vertexCoordinates[vertex.label].x}
 									y={vertexCoordinates[vertex.label].y}
 									label={vertex.label}
-									orientation={orientation}
 									onClick={_ => vertex.onClick(vertex.label, index, vertex.extras)}
 									disabled={vertex.disabled}
 									{...vertexProps}
@@ -217,7 +217,6 @@ export default class Graph extends React.Component {
 }
 
 Graph.propTypes = {
-	orientation: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
 	width: PropTypes.number.isRequired,
 	height: PropTypes.number.isRequired,
 	vertexGap: PropTypes.number.isRequired,
@@ -225,7 +224,6 @@ Graph.propTypes = {
 }
 
 Graph.defaultProps = {
-	orientation: 'horizontal',
 	vertexGap: 100,
 	perfectlyCenter: false
 }

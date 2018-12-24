@@ -58,15 +58,15 @@ export default class Vertex extends React.Component {
 
 	render() {
 
-		const { disabled, x, y, label, onClick, vertexStroke, vertexStrokeWidth, vertexRadius, orientation, labelFontSize  } = this.props
+		const { disabled, x, y, label, onClick, vertexStroke, vertexStrokeWidth, vertexRadius, labelFontSize  } = this.props
 		const { vertexFill, textOffsetX, textOffsetY, showTextNode } = this.state
 
 		return (
 			<Group>
 				{showTextNode ? <Text
 					ref={node => this.text = node }
-					x={orientation === "horizontal" ? x : x - textOffsetX  - vertexRadius - vertexStrokeWidth - 5 }
-					y={orientation === "horizontal" ? y - textOffsetY * 2 - vertexRadius - vertexStrokeWidth : y - textOffsetY }
+					x={ x }
+					y={y - textOffsetY * 2 - vertexRadius - vertexStrokeWidth}
 					offsetX={textOffsetX}
 					fontSize={labelFontSize}
 					text={label} /> : null }
