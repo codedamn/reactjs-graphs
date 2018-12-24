@@ -11,20 +11,46 @@ export default class Graph extends React.Component {
 		super(props)
 		this.state = {
 			list: [],
-			backtrackList: [],
 			vertexCoordinates: {}
 		}
 
 		props.vertices.forEach((vertex, index) => {
-			this.state.list.push({ name: vertex.label, next: [] })
-			this.state.backtrackList.push({ name: vertex.label, prev: [] })
+			this.state.list.push({ 
+				name: vertex.label, 
+				from: [],
+				to: [], // needed to calculate siblings of next nodes
+				siblings: 0
+			})
 		})
 
-		props.edges.map(edge => {
-			this.state.list.find(e => e.name == edge[0]).next.push(edge[1])
+		props.edges.forEach(edge => {
+
+			const from = edge[0]
+			const to = edge[1]
+			this.state.list.find(e => e.name == to).from.push(from)
+			this.state.list.find(e => e.name == from).to.push(to)
+
 		})
 
-		let mainIndex = 1
+		this.state.list.forEach(vertex => {
+
+			const multipleEntriesToThisVertex = vertex.from.length > 1
+			
+			vertex.from.forEach(v => {
+				const parentVertex = this.state.list.find(obj => obj.name === v)
+				if(parentVertex.to.length > 1 && multipleEntriesToThisVertex) {
+					throw new Error(`[Crash at calculating vertex "${vertex.name}"] Cannot create a graph which connects 2 branches as well as diverges into 2 edges at the same time. I honestly don't know how this should look like mathematically, so I'm crashing at this possibility to avoid non-deterministic layouts. `)
+				}
+				vertex.siblings += parentVertex.to.length
+			})
+
+			vertex.siblings = multipleEntriesToThisVertex ? 1 : vertex.siblings // If a vertex has multiple entries, that vertex is not allowed to have any sibilings (already checked and throwed above)
+
+			if(vertex.siblings == 0) {
+				// first node
+				vertex.siblings = 1
+			}
+		})		
 		
 		let totalYAllowed = props.height
 		let vertexGap = props.vertexGap
@@ -32,129 +58,57 @@ export default class Graph extends React.Component {
 		let horizontalMin = 0, horizontalMax = 0
 		let verticalMin = props.height/2, verticalMax = props.height/2
 
-		console.log(this.state.list)
-
 		this.state.list.map(mainVertex => {
 			
-			const edgesTo = mainVertex.next
-
-			let partitionLength = totalYAllowed/(edgesTo.length + 1)
-
-			const mainVertexCoordinates = this.state.vertexCoordinates[mainVertex.name]
+			//let partitionLength = totalYAllowed/(edgesTo.length + 1)
+			const coords = this.state.vertexCoordinates
 			
-			let childX = vertexGap*mainIndex
-
-			if(mainVertexCoordinates) {
-				// if mainVertex is already set, take partitionLength from it (to keep it at same Y coordinate)
-				// also take x coordinate from the same and add the standard center gap
-				partitionLength = mainVertexCoordinates.y * 2/(edgesTo.length + 1)
-				childX = mainVertexCoordinates.x + vertexGap
-			}
-
-			for(let i=0;i<edgesTo.length;i++) {
-				
-				this.state.backtrackList.find(obj => obj.name == edgesTo[i]).prev.push(mainVertex.name)
-
-				const childVertex = edgesTo[i]
-
-				const childY = (i + 1)*partitionLength
-
-				if(childVertex in this.state.vertexCoordinates) {
-					// this vertex is already set
-					continue
-				}
-
-				this.state.vertexCoordinates[childVertex] = {
-					x: childX,
-					y: childY // move the vertex down as i increases
-				}
-
-				verticalMin = childY < verticalMin ? childY : verticalMin
-				verticalMax = childY > verticalMax ? childY : verticalMax
-
-				horizontalMin = childX < horizontalMin ? childX : horizontalMin
-				horizontalMax = childX > horizontalMax ? childX : horizontalMax
-			}
-
-			if(edgesTo.length > 1) {
-				// the vertex had branched into 2 subgraphs, do not update x-coordinate
+			let x, y
+			if(mainVertex.from.length == 0) {
+				x = vertexGap
+				y = totalYAllowed/2
 			} else {
-				mainIndex++
-			}
-		})
+				let closestParent = coords[mainVertex.from[0]]
+				let closestParentName = mainVertex.from[0]
 
-		let flag = false
-
-		props.vertices.forEach(vertex => {
-			if(vertex.label in this.state.vertexCoordinates) {
-				// ok
-			} else {
-				if(flag) throw new Error(`Initializing the graph with multiple vertices (${vertex.label})? Only 1 vertex is supported for now`)
-				// this is the first vertex which was not registered in the for-loop above
-				flag = true
-				this.state.vertexCoordinates[vertex.label] = {
-					x: 0,
-					y: totalYAllowed/2
+				for(let i=1;i<mainVertex.from.length;i++) {
+					if(coords[mainVertex.from[i]].x > closestParent.x) {
+						closestParent = coords[mainVertex.from[i]]
+						closestParentName = mainVertex.from[i]
+					}
 				}
-			}
-		})
+				x = closestParent.x + vertexGap
 
-		console.log(this.state.backtrackList)
-
-		console.log(verticalMin, verticalMax)
-		console.log(horizontalMin, horizontalMax)
-
-		this.state.backtrackList.forEach(mainVertex => {
-			// this is for correcting positions of multiple vertices joined to single vertex
-			const edgeTo = mainVertex.prev
-			if(edgeTo.length < 100) return
-			
-			debugger
-			
-			//const { y:oldY } = this.state.vertexCoordinates[mainVertex.name]
-
-			let sumY = 0
-
-			edgeTo.forEach(vertex => {
-				sumY += this.state.vertexCoordinates[vertex].y
-			})
-
-			sumY /= edgeTo.length
-
-			//this.state.vertexCoordinates[mainVertex.name].y = sumY
-
-			// now we've messed up with the y coordinate. need to update the immediate next layer
-
-			//debugger
-			const _mainVertex = this.state.list.find(obj => obj.name === mainVertex.name)
-			const edgesNow = _mainVertex.next
-
-			let partitionLength = totalYAllowed/(edgesNow.length + 1)
-
-			const mainVertexCoordinates = this.state.vertexCoordinates[_mainVertex.name]
-			partitionLength = mainVertexCoordinates.y * 2/(edgesNow.length + 1)
-
-			for(let i=0;i<edgesNow.length;i++) {
 				
-				const childVertex = edgesNow[i]
+				
+				const index = this.state.list.find(obj => obj.name == closestParentName).to.indexOf(mainVertex.name) + 1
 
-				const childY = (i + 1)*partitionLength
+				y = index * 2 * mainVertex.from.reduce((total, currentValue) => {
 
-//				this.state.vertexCoordinates[childVertex].y = childY
+					if(!coords[currentValue]) {
+						throw new Error(`[CRASHED at "${currentValue}"] Invalid order of passed vertices. Please pass them in the same order as you want them to print on screen`)
+					}
+					debugger
+					return total + coords[currentValue].y
+				}, 0)/((mainVertex.siblings + 1) * (mainVertex.from.length))
 
-				verticalMin = childY < verticalMin ? childY : verticalMin
-				verticalMax = childY > verticalMax ? childY : verticalMax
 			}
 
+			coords[mainVertex.name] = { x, y }
 		})
+
+		console.log(this.state.vertexCoordinates)
 
 		//this.state.horizontalShift = -(horizontalMin + horizontalMax)/2
 		this.state.verticalShift = ((verticalMin + verticalMax) - (props.height))/2
 		this.state.horizontalShift = ((horizontalMin + horizontalMax) - (props.width))/2
 		
 		if(!props.perfectlyCenter) {
-			this.state.verticalShift = 0
 		}
+
+		this.state.verticalShift = 0 //-100
+
+		this.state.horizontalShift = 0
 	}
 
 	getEdges(edgeProps) {
@@ -164,7 +118,7 @@ export default class Graph extends React.Component {
 		const elems = []
 		list.map(mainVertex => {
 			const vertex = mainVertex.name
-			const edgesTo = mainVertex.next
+			const edgesTo = mainVertex.to
 
 			const { x: parentX, y: parentY } = vertexCoordinates[vertex]
 
