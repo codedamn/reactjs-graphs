@@ -1,5 +1,5 @@
 import React from 'react'
-import { Circle, Text } from 'react-konva'
+import { Circle, Text, Group } from 'react-konva'
 import PropTypes from 'prop-types'
 
 export default class Vertex extends React.Component {
@@ -10,55 +10,79 @@ export default class Vertex extends React.Component {
 		this.mouseOutVertex = this.mouseOutVertex.bind(this)
 		this.state = {
 			vertexFill: props.inactiveVertexFill,
-			textOffsetX: 0
+			textOffsetX: 0,
+			textOffsetY: 0,
+			showTextNode: true
 		}
 	}
 
 	componentDidMount() {
 		this.setState({
-			textOffsetX: this.text.width() / 2
+			textOffsetX: this.text.width() / 2,
+			textOffsetY: this.text.height() / 2,
+			showTextNode: !this.props.disabled
 		})
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return this.state != nextState
 	}
 
 	mouseOutVertex() {
 		document.body.style.cursor = 'default'
-		this.setState({
-			vertexFill: this.props.inactiveVertexFill
-		})
+		
+		if(this.props.disabled) {
+			// disabled vertex
+			this.setState({
+				showTextNode: false
+			})
+		} else {
+			this.setState({
+				vertexFill: this.props.inactiveVertexFill
+			})
+		}
 	}
 
 	mouseInVertex() {
 		document.body.style.cursor = 'pointer'
-		this.setState({
-			vertexFill: this.props.activeVertexFill
-		})
+		if(this.props.disabled) {
+			this.setState({
+				showTextNode: true
+			})
+		} else {
+			this.setState({
+				vertexFill: this.props.activeVertexFill
+			})
+		}
 	}
 
 	render() {
 
-		const { x, y, label, onClick, vertexStroke, vertexStrokeWidth, vertexRadius  } = this.props
-		const { vertexFill, textOffsetX } = this.state
+		const { disabled, x, y, label, onClick, vertexStroke, vertexStrokeWidth, vertexRadius, orientation, labelFontSize  } = this.props
+		const { vertexFill, textOffsetX, textOffsetY, showTextNode } = this.state
 
 		return (
-			<>
-				<Text
+			<Group>
+				{showTextNode ? <Text
 					ref={node => this.text = node }
-					x={x}
-					y={y-30}
+					x={orientation === "horizontal" ? x : x - textOffsetX  - vertexRadius - vertexStrokeWidth - 5 }
+					y={orientation === "horizontal" ? y - textOffsetY * 2 - vertexRadius - vertexStrokeWidth : y - textOffsetY }
 					offsetX={textOffsetX}
-					text={label} />
+					fontSize={labelFontSize}
+					text={label} /> : null }
 				<Circle
 					x={x}
 					onClick={onClick}
 					onMouseEnter={this.mouseInVertex}
 					onMouseLeave={this.mouseOutVertex}
 					y={y}
-					stroke={vertexStroke}
+					filter
+					stroke={!disabled ? vertexStroke : "gray" }
 					strokeWidth={vertexStrokeWidth}
-					fill={vertexFill}
+					fill={!disabled ? vertexFill : "gray" }
 					radius={vertexRadius}
 				/>
-			</>
+			</Group>
 		)
 	}
 }
@@ -70,7 +94,8 @@ Vertex.propTypes = {
 	vertexStrokeWidth: PropTypes.number.isRequired,
 	inactiveVertexFill: PropTypes.string.isRequired,
 	activeVertexFill: PropTypes.string.isRequired,
-	vertexRadius: PropTypes.number.isRequired
+	vertexRadius: PropTypes.number.isRequired,
+	labelFontSize: PropTypes.number.isRequired
 }
 
 Vertex.defaultProps ={
@@ -78,5 +103,6 @@ Vertex.defaultProps ={
 	vertexStrokeWidth: 3,
 	inactiveVertexFill: "white",
 	activeVertexFill: "#df6766",
-	vertexRadius: 10
+	vertexRadius: 10,
+	labelFontSize: 12
 }

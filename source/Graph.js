@@ -11,11 +11,13 @@ export default class Graph extends React.Component {
 		super(props)
 		this.state = {
 			list: [],
+			backtrackList: [],
 			vertexCoordinates: {}
 		}
 
 		props.vertices.forEach((vertex, index) => {
 			this.state.list.push({ name: vertex.label, next: [] })
+			this.state.backtrackList.push({ name: vertex.label, prev: [] })
 		})
 
 		props.edges.map(edge => {
@@ -24,11 +26,13 @@ export default class Graph extends React.Component {
 
 		let mainIndex = 1
 		
-		let totalYAllowed = props.height
+		let totalYAllowed = props.orientation === "horizontal" ? props.height : props.width
 		let vertexGap = props.vertexGap
 
 		let horizontalMin = 0, horizontalMax = 0
 		let verticalMin = props.height/2, verticalMax = props.height/2
+
+		console.log(this.state.list)
 
 		this.state.list.map(mainVertex => {
 			
@@ -55,6 +59,8 @@ export default class Graph extends React.Component {
 
 			for(let i=0;i<edgesTo.length;i++) {
 				
+				this.state.backtrackList.find(obj => obj.name == edgesTo[i]).prev.push(mainVertex.name)
+
 				const childVertex = edgesTo[i]
 
 				const childY = (i + 1)*partitionLength
@@ -97,10 +103,10 @@ export default class Graph extends React.Component {
 			if(vertex.label in this.state.vertexCoordinates) {
 				// ok
 			} else {
-				if(flag) throw new Error("Initializing the graph with multiple vertices? Only 1 vertex is supported for now")
+				if(flag) throw new Error(`Initializing the graph with multiple vertices (${vertex.label})? Only 1 vertex is supported for now`)
 				// this is the first vertex which was not registered in the for-loop above
 				flag = true
-				if(this.props.orientation === 'horizontal') {
+				if(props.orientation === 'horizontal') {
 					this.state.vertexCoordinates[vertex.label] = {
 						x: 0,
 						y: totalYAllowed/2
@@ -114,15 +120,40 @@ export default class Graph extends React.Component {
 			}
 		})
 
-		console.log(this.state.vertexCoordinates)
+		console.log(this.state.backtrackList)
 
 		console.log(verticalMin, verticalMax)
 		console.log(horizontalMin, horizontalMax)
 
+		this.state.backtrackList.forEach(mainVertex => {
+			// this is for correcting positions of multiple vertices joined to single vertex
+			const edgeTo = mainVertex.prev
+			if(edgeTo.length < 2) return
+			
+			//debugger
+			
+			//const { y:oldY } = this.state.vertexCoordinates[mainVertex.name]
+
+			let sumY = 0
+
+			edgeTo.forEach(vertex => {
+				sumY += this.state.vertexCoordinates[vertex].y
+			})
+
+			sumY /= edgeTo.length
+
+			this.state.vertexCoordinates[mainVertex.name].y = sumY
+
+		})
+
 		//this.state.horizontalShift = -(horizontalMin + horizontalMax)/2
 		this.state.verticalShift = ((verticalMin + verticalMax) - (props.height))/2
 		this.state.horizontalShift = ((horizontalMin + horizontalMax) - (props.width))/2
-
+		
+		if(!props.perfectlyCenter) {
+			if(props.orientation === "vertical") this.state.horizontalShift = 0
+			else this.state.verticalShift = 0
+		}
 	}
 
 	getEdges(edgeProps) {
@@ -140,7 +171,7 @@ export default class Graph extends React.Component {
 				const { x, y } = vertexCoordinates[edgesTo[i]]
 				elems.push(<Edge
 							key={vertex + edgesTo[i]}
-							points={[parentX, parentY, (parentX + x)/2, (parentY + y + (Math.floor(Math.random()*20) - 10))/2, x, y]}
+							points={[parentX, parentY, (parentX + x  + (Math.floor(Math.random()*20) - 10) )/2, (parentY + y + (Math.floor(Math.random()*20) - 10))/2, x, y]}
 							{...edgeProps}
 						/>)
 			}
@@ -151,26 +182,29 @@ export default class Graph extends React.Component {
 	render() {
 		const { vertexCoordinates, horizontalShift, verticalShift } = this.state
 		
-		const { vertexStroke, vertexStrokeWidth, inactiveVertexFill, activeVertexFill, vertexRadius } = this.props
-		const vertexProps = { vertexStroke, vertexStrokeWidth, inactiveVertexFill, activeVertexFill, vertexRadius }
+		const { labelFontSize, vertexStroke, vertexStrokeWidth, inactiveVertexFill, activeVertexFill, vertexRadius } = this.props
+		const vertexProps = { labelFontSize, vertexStroke, vertexStrokeWidth, inactiveVertexFill, activeVertexFill, vertexRadius }
 		
 		const { edgeStroke, edgeWidth } = this.props
 		const edgeProps = { edgeStroke, edgeWidth }
 		
-		const { vertices, width, height } = this.props
+		const { vertices, width, height, orientation } = this.props
 
 		return (
 		<Stage width={width} height={height}>
 			<Layer>
 				<Group ref={k => this.group = k} offsetX={horizontalShift} offsetY={verticalShift}>
-					{this.getEdges(edgeProps)}
+					
+				{this.getEdges(edgeProps)}
 					{vertices.map((vertex, index) => {
 						return <Vertex
 									key={index}
 									x={vertexCoordinates[vertex.label].x}
 									y={vertexCoordinates[vertex.label].y}
 									label={vertex.label}
+									orientation={orientation}
 									onClick={_ => vertex.onClick(vertex.label, index, vertex.extras)}
+									disabled={vertex.disabled}
 									{...vertexProps}
 								/>
 						})
@@ -186,10 +220,12 @@ Graph.propTypes = {
 	orientation: PropTypes.oneOf(['horizontal', 'vertical']).isRequired,
 	width: PropTypes.number.isRequired,
 	height: PropTypes.number.isRequired,
-	vertexGap: PropTypes.number.isRequired
+	vertexGap: PropTypes.number.isRequired,
+	perfectlyCenter: PropTypes.bool.isRequired
 }
 
 Graph.defaultProps = {
 	orientation: 'horizontal',
-	vertexGap: 100
+	vertexGap: 100,
+	perfectlyCenter: false
 }
