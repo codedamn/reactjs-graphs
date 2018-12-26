@@ -57,7 +57,7 @@ export default class Vertex extends React.Component {
 					y={y - textOffsetY * 2 - vertexRadius - vertexStrokeWidth}
 					offsetX={textOffsetX}
 					fontSize={labelFontSize}
-					text={label} />
+					text={" "} />
 				<Circle
 					x={x}
 					onClick={(...args) => disabled ? void 0 : onClick(...args)}
