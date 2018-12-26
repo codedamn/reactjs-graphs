@@ -45,7 +45,7 @@ export default class Vertex extends React.Component {
 
 	render() {
 
-		const { disabled, x, y, label, onClick, vertexStroke, vertexStrokeWidth, vertexRadius, labelFontSize  } = this.props
+		const { labelColor, labelColorDisabled, disabled, x, y, label, onClick, vertexStroke, vertexStrokeWidth, vertexRadius, labelFontSize  } = this.props
 		const { vertexFill, textOffsetX, textOffsetY } = this.state
 
 		return (
@@ -53,11 +53,11 @@ export default class Vertex extends React.Component {
 				<Text
 					ref={node => this.text = node }
 					x={ x }
-					fill={disabled ? "gray" : undefined }
+					fill={disabled ? labelColorDisabled : labelColor }
 					y={y - textOffsetY * 2 - vertexRadius - vertexStrokeWidth}
 					offsetX={textOffsetX}
 					fontSize={labelFontSize}
-					text={" "} />
+					text={label} />
 				<Circle
 					x={x}
 					onClick={(...args) => disabled ? void 0 : onClick(...args)}
@@ -83,7 +83,9 @@ Vertex.propTypes = {
 	inactiveVertexFill: PropTypes.string.isRequired,
 	activeVertexFill: PropTypes.string.isRequired,
 	vertexRadius: PropTypes.number.isRequired,
-	labelFontSize: PropTypes.number.isRequired
+	labelFontSize: PropTypes.number.isRequired,
+	labelColor: PropTypes.string.isRequired,
+	labelColorDisabled: PropTypes.string
 }
 
 Vertex.defaultProps ={
@@ -92,5 +94,7 @@ Vertex.defaultProps ={
 	inactiveVertexFill: "white",
 	activeVertexFill: "#df6766",
 	vertexRadius: 10,
-	labelFontSize: 12
+	labelFontSize: 12,
+	labelColor: "black",
+	labelColorDisabled: "gray"
 }
