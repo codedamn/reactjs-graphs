@@ -158,16 +158,16 @@ export default class Graph extends React.Component {
 	render() {
 		const { vertexCoordinates, horizontalShift, verticalShift, width, height } = this.state
 		
-		const { labelColor, labelColorDisabled, labelFontSize, vertexStroke, vertexStrokeWidth, inactiveVertexFill, activeVertexFill, vertexRadius } = this.props
-		const vertexProps = { labelColor, labelColorDisabled, labelFontSize, vertexStroke, vertexStrokeWidth, inactiveVertexFill, activeVertexFill, vertexRadius }
+		const { fontFamily, labelColor, labelColorDisabled, labelFontSize, vertexStroke, vertexStrokeWidth, inactiveVertexFill, activeVertexFill, vertexRadius } = this.props
+		const vertexProps = { fontFamily, labelColor, labelColorDisabled, labelFontSize, vertexStroke, vertexStrokeWidth, inactiveVertexFill, activeVertexFill, vertexRadius }
 		
 		const { edgeStroke, edgeWidth } = this.props
 		const edgeProps = { edgeStroke, edgeWidth }
 		
-		const { vertices } = this.props
+		const { vertices, className } = this.props
 
 		return (
-		<Stage width={width} height={height}>
+		<Stage width={width} height={height} className={className}>
 			<Layer>
 				<Group ref={k => this.group = k} offsetX={horizontalShift} offsetY={verticalShift}>
 					
@@ -196,11 +196,13 @@ Graph.propTypes = {
 	height: PropTypes.number.isRequired,
 	vertexGap: PropTypes.number.isRequired,
 	centerInCanvas: PropTypes.bool.isRequired,
-	autoWidth: PropTypes.bool.isRequired
+	autoWidth: PropTypes.bool.isRequired,
+	className: PropTypes.string
 }
 
 Graph.defaultProps = {
 	vertexGap: 100,
 	centerInCanvas: false,
-	autoWidth: false
+	autoWidth: false,
+	className: ""
 }

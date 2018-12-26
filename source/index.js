@@ -63,5 +63,6 @@ ReactDOM.render(<Graph
 	vertexRadius={15}
 	vertexGap={200}
 	labelFontSize={20}
+	className="graphcanvas"
 	centerInCanvas={true}
 />, document.getElementById('root'))

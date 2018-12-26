@@ -66,7 +66,11 @@ ReactDOM.render(<Graph
 	vertexRadius={15} // radius of vertex
 	vertexGap={200} // gap between vertices
 	labelFontSize={20} // font size of labels
+	activeVertexFill="blue" // color of vertex when hovered
+	inactiveVertexFill="white" // color of vertex when not hovered
+	fontFamily="Airbnb Cereal" // name of font
 	labelColor="black" // color of label
+	className="className" // class name given to canvas parent
 	centerInCanvas={true} // centers the whole graph horizontally and vertically
 />, document.getElementById('root'))
 ```
