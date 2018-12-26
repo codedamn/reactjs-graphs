@@ -158,8 +158,8 @@ export default class Graph extends React.Component {
 	render() {
 		const { vertexCoordinates, horizontalShift, verticalShift, width, height } = this.state
 		
-		const { labelFontSize, vertexStroke, vertexStrokeWidth, inactiveVertexFill, activeVertexFill, vertexRadius } = this.props
-		const vertexProps = { labelFontSize, vertexStroke, vertexStrokeWidth, inactiveVertexFill, activeVertexFill, vertexRadius }
+		const { labelColor, labelColorDisabled, labelFontSize, vertexStroke, vertexStrokeWidth, inactiveVertexFill, activeVertexFill, vertexRadius } = this.props
+		const vertexProps = { labelColor, labelColorDisabled, labelFontSize, vertexStroke, vertexStrokeWidth, inactiveVertexFill, activeVertexFill, vertexRadius }
 		
 		const { edgeStroke, edgeWidth } = this.props
 		const edgeProps = { edgeStroke, edgeWidth }

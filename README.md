@@ -66,6 +66,7 @@ ReactDOM.render(<Graph
 	vertexRadius={15} // radius of vertex
 	vertexGap={200} // gap between vertices
 	labelFontSize={20} // font size of labels
+	labelColor="black" // color of label
 	centerInCanvas={true} // centers the whole graph horizontally and vertically
 />, document.getElementById('root'))
 ```
