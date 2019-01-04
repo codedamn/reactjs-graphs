@@ -62,6 +62,7 @@ export default class Vertex extends React.Component {
 				<Circle
 					x={x}
 					onClick={(...args) => disabled ? void 0 : onClick(...args)}
+					onTap={(...args) => disabled ? void 0 : onClick(...args)}
 					onMouseEnter={this.mouseInVertex}
 					onMouseLeave={this.mouseOutVertex}
 					y={y}

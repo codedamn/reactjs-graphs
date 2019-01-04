@@ -14,6 +14,7 @@ module.exports = {
   },
   mode: process.env.NODE_ENV || 'development',
   devServer: {
+	host: '0.0.0.0',
 	publicPath: '/',
 	port: 9999,
 	index: 'index.html',
